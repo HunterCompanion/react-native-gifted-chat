@@ -1,0 +1,1 @@
+{"version":3,"file":"GiftedChatContext.js","sourceRoot":"","sources":["../src/GiftedChatContext.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,UAAU,EAAE,MAAM,OAAO,CAAA;AAMjD,MAAM,CAAC,MAAM,iBAAiB,GAAG,aAAa,CAAqB;IACjE,SAAS,EAAE,GAAG,EAAE,CAAC,IAAI;CAEtB,CAAC,CAAA;AAEF,MAAM,CAAC,MAAM,cAAc,GAAG,GAAG,EAAE,CAAC,UAAU,CAAC,iBAAiB,CAAC,CAAA"}
