@@ -55,7 +55,7 @@ const CustomView = ({
   if (currentMessage.location)
     return (
       <TouchableOpacity
-        style={[styles.container, containerStyle]}
+        style={containerStyle}
         onPress={openMapAsync}
       >
         {Platform.OS !== 'web'
@@ -75,7 +75,7 @@ const CustomView = ({
           : (
             <View style={{ padding: 15 }}>
               <Text style={{ color: 'tomato', fontWeight: 'bold' }}>
-              Map not supported in web yet, sorry!
+                Map not supported in web yet, sorry!
               </Text>
             </View>
           )}
@@ -88,7 +88,6 @@ const CustomView = ({
 export default CustomView
 
 const styles = StyleSheet.create({
-  container: {},
   mapView: {
     width: 150,
     height: 100,

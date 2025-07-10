@@ -1,7 +1,5 @@
 import React, { RefObject } from 'react'
-import {
-  ActionSheetOptions,
-} from '@expo/react-native-action-sheet'
+
 import {
   TextInput,
   StyleProp,
@@ -9,7 +7,6 @@ import {
   ViewStyle,
 } from 'react-native'
 import { LightboxProps } from 'react-native-lightbox-v2'
-import { ActionsProps } from '../Actions'
 import { AvatarProps } from '../Avatar'
 import { ComposerProps } from '../Composer'
 import { DayProps } from '../Day'
@@ -123,7 +120,6 @@ export interface GiftedChatProps<TMessage extends IMessage> extends Partial<Mess
   /* Custom action sheet */
   actionSheet?(): {
     showActionSheetWithOptions: (
-      options: ActionSheetOptions,
       callback: (buttonIndex: number) => void | Promise<void>,
     ) => void
   }
@@ -180,8 +176,6 @@ export interface GiftedChatProps<TMessage extends IMessage> extends Partial<Mess
   renderInputToolbar?(props: InputToolbarProps<TMessage>): React.ReactNode
   /*  Custom text input message composer */
   renderComposer?(props: ComposerProps): React.ReactNode
-  /* Custom action button on the left of the message composer */
-  renderActions?(props: ActionsProps): React.ReactNode
   /* Custom send button; you can pass children to the original Send component quite easily, for example to use a custom icon (example) */
   renderSend?(props: SendProps<TMessage>): React.ReactNode
   /* Custom second line of actions below the message composer */

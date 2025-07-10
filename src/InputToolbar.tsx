@@ -3,7 +3,6 @@ import { StyleSheet, View, StyleProp, ViewStyle } from 'react-native'
 
 import { Composer, ComposerProps } from './Composer'
 import { Send, SendProps } from './Send'
-import { Actions, ActionsProps } from './Actions'
 import Color from './Color'
 import { IMessage } from './types'
 
@@ -14,7 +13,6 @@ export interface InputToolbarProps<TMessage extends IMessage> {
   primaryStyle?: StyleProp<ViewStyle>
   accessoryStyle?: StyleProp<ViewStyle>
   renderAccessory?(props: InputToolbarProps<TMessage>): React.ReactNode
-  renderActions?(props: ActionsProps): React.ReactNode
   renderSend?(props: SendProps<TMessage>): React.ReactNode
   renderComposer?(props: ComposerProps): React.ReactNode
   onPressActionButton?(): void
@@ -26,40 +24,11 @@ export function InputToolbar<TMessage extends IMessage = IMessage> (
   props: InputToolbarProps<TMessage>
 ) {
   const {
-    renderActions,
-    onPressActionButton,
     renderComposer,
     renderSend,
     renderAccessory,
-    options,
-    optionTintColor,
-    icon,
-    wrapperStyle,
     containerStyle,
   } = props
-
-  const actionsFragment = useMemo(() => {
-    const props = {
-      onPressActionButton,
-      options,
-      optionTintColor,
-      icon,
-      wrapperStyle,
-      containerStyle,
-    }
-
-    return (
-      renderActions?.(props) || (onPressActionButton && <Actions {...props} />)
-    )
-  }, [
-    renderActions,
-    onPressActionButton,
-    options,
-    optionTintColor,
-    icon,
-    wrapperStyle,
-    containerStyle,
-  ])
 
   const composerFragment = useMemo(() => {
     return (
@@ -72,7 +41,6 @@ export function InputToolbar<TMessage extends IMessage = IMessage> (
   return (
     <View style={[styles.container, containerStyle]}>
       <View style={[styles.primary, props.primaryStyle]}>
-        {actionsFragment}
         {composerFragment}
         {renderSend?.(props) || <Send {...props} />}
       </View>

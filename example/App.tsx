@@ -11,7 +11,6 @@ import {
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { NavBar } from './components/navbar'
 import AccessoryBar from './example-expo/AccessoryBar'
-import CustomActions from './example-expo/CustomActions'
 import CustomView from './example-expo/CustomView'
 import earlierMessages from './example-expo/data/earlierMessages'
 import messagesData from './example-expo/data/messages'
@@ -50,7 +49,7 @@ interface StateAction {
   payload?: any
 }
 
-function reducer (state: IState, action: StateAction) {
+function reducer(state: IState, action: StateAction) {
   switch (action.type) {
     case ActionKind.SEND_MESSAGE: {
       return {
@@ -137,32 +136,25 @@ const App = () => {
     Alert.alert('On avatar press')
   }, [])
 
-  const handleLongPress = useCallback((context: unknown, currentMessage: object) => {
+  const handleLongPress = useCallback((context: unknown, currentMessage: IMessage) => {
     if (!currentMessage.text)
       return
 
-    const options = [
-      'Copy text',
-      'Cancel',
-    ]
-
-    const cancelButtonIndex = options.length - 1
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(context as any).actionSheet().showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-      },
-      (buttonIndex: number) => {
-        switch (buttonIndex) {
-          case 0:
+    Alert.alert(
+      'Message Options',
+      'What would you like to do?',
+      [
+        {
+          text: 'Copy text',
+          onPress: () => {
             Clipboard.setStringAsync(currentMessage.text)
-            break
-          default:
-            break
-        }
-      }
+          },
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ]
     )
   }, [])
 
@@ -225,16 +217,6 @@ const App = () => {
     )
   }, [onSendFromUser, setIsTyping, state.isTyping])
 
-  const renderCustomActions = useCallback(
-    props =>
-      Platform.OS === 'web'
-        ? null
-        : (
-          <CustomActions {...props} onSend={onSendFromUser} />
-        ),
-    [onSendFromUser]
-  )
-
   const renderSystemMessage = useCallback(props => {
     return (
       <SystemMessage
@@ -261,6 +243,7 @@ const App = () => {
     )
   }, [])
 
+
   const insets = useSafeAreaInsets()
 
   return (
@@ -286,7 +269,6 @@ const App = () => {
           }}
           renderQuickReplySend={renderQuickReplySend}
           renderAccessory={renderAccessory}
-          renderActions={renderCustomActions}
           renderSystemMessage={renderSystemMessage}
           renderCustomView={renderCustomView}
           renderSend={renderSend}

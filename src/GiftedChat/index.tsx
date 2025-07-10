@@ -7,10 +7,6 @@ import React, {
   useCallback,
   RefObject,
 } from 'react'
-import {
-  ActionSheetProvider,
-  ActionSheetProviderRef,
-} from '@expo/react-native-action-sheet'
 import dayjs from 'dayjs'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
 import {
@@ -19,7 +15,6 @@ import {
   View,
   LayoutChangeEvent,
 } from 'react-native'
-import { Actions } from '../Actions'
 import { Avatar } from '../Avatar'
 import Bubble from '../Bubble'
 import { Composer } from '../Composer'
@@ -55,7 +50,7 @@ import styles from './styles'
 
 dayjs.extend(localizedFormat)
 
-function GiftedChat<TMessage extends IMessage = IMessage> (
+function GiftedChat<TMessage extends IMessage = IMessage>(
   props: GiftedChatProps<TMessage>
 ) {
   const {
@@ -72,7 +67,6 @@ function GiftedChat<TMessage extends IMessage = IMessage> (
     onSend,
     locale = 'en',
     renderLoading,
-    actionSheet = null,
     textInputProps,
     renderChatFooter = null,
     renderInputToolbar = null,
@@ -91,7 +85,6 @@ function GiftedChat<TMessage extends IMessage = IMessage> (
     isKeyboardInternallyHandled = true,
   } = props
 
-  const actionSheetRef = useRef<ActionSheetProviderRef>(null)
 
   const messageContainerRef = useMemo(
     () => props.messageContainerRef || createRef<AnimatedList<TMessage>>(),
@@ -364,15 +357,9 @@ function GiftedChat<TMessage extends IMessage = IMessage> (
 
   const contextValues = useMemo(
     () => ({
-      actionSheet:
-        actionSheet ||
-        (() => ({
-          showActionSheetWithOptions:
-            actionSheetRef.current!.showActionSheetWithOptions,
-        })),
       getLocale: () => locale,
     }),
-    [actionSheet, locale]
+    [locale]
   )
 
   useEffect(() => {
@@ -425,29 +412,27 @@ function GiftedChat<TMessage extends IMessage = IMessage> (
 
   return (
     <GiftedChatContext.Provider value={contextValues}>
-      <ActionSheetProvider ref={actionSheetRef}>
-        <View
-          testID={TEST_ID.WRAPPER}
-          style={[stylesCommon.fill, styles.contentContainer]}
-          onLayout={onInitialLayoutViewLayout}
-        >
-          {isInitialized
-            ? (
-              <Animated.View style={[stylesCommon.fill, isKeyboardInternallyHandled && contentStyleAnim]}>
-                {renderMessages}
-                {inputToolbarFragment}
-              </Animated.View>
-            )
-            : (
-              renderLoading?.()
-            )}
-        </View>
-      </ActionSheetProvider>
+      <View
+        testID={TEST_ID.WRAPPER}
+        style={[stylesCommon.fill, styles.contentContainer]}
+        onLayout={onInitialLayoutViewLayout}
+      >
+        {isInitialized
+          ? (
+            <Animated.View style={[stylesCommon.fill, isKeyboardInternallyHandled && contentStyleAnim]}>
+              {renderMessages}
+              {inputToolbarFragment}
+            </Animated.View>
+          )
+          : (
+            renderLoading?.()
+          )}
+      </View>
     </GiftedChatContext.Provider>
   )
 }
 
-function GiftedChatWrapper<TMessage extends IMessage = IMessage> (props: GiftedChatProps<TMessage>) {
+function GiftedChatWrapper<TMessage extends IMessage = IMessage>(props: GiftedChatProps<TMessage>) {
   return (
     <KeyboardProvider>
       <GiftedChat<TMessage> {...props} />
@@ -485,7 +470,6 @@ export * from '../types'
 
 export {
   GiftedChatWrapper as GiftedChat,
-  Actions,
   Avatar,
   Bubble,
   SystemMessage,

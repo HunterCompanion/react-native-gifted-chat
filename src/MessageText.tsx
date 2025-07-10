@@ -11,7 +11,6 @@ import {
 
 import ParsedText from 'react-native-parsed-text'
 import { LeftRightStyle, IMessage } from './types'
-import { useChatContext } from './GiftedChatContext'
 import { error } from './logging'
 
 const WWW_URL_PATTERN = /^www\./i
@@ -52,8 +51,6 @@ const styles = {
   }),
 }
 
-const DEFAULT_OPTION_TITLES = ['Call', 'Text', 'Cancel']
-
 export interface MessageTextProps<TMessage extends IMessage> {
   position?: 'left' | 'right'
   optionTitles?: string[]
@@ -68,7 +65,6 @@ export interface MessageTextProps<TMessage extends IMessage> {
 
 export function MessageText<TMessage extends IMessage = IMessage> ({
   currentMessage = {} as TMessage,
-  optionTitles = DEFAULT_OPTION_TITLES,
   position = 'left',
   containerStyle,
   textStyle,
@@ -77,8 +73,6 @@ export function MessageText<TMessage extends IMessage = IMessage> ({
   parsePatterns,
   textProps,
 }: MessageTextProps<TMessage>) {
-  const { actionSheet } = useChatContext()
-
   // TODO: React.memo
   // const shouldComponentUpdate = (nextProps: MessageTextProps<TMessage>) => {
   //   return (
@@ -97,34 +91,6 @@ export function MessageText<TMessage extends IMessage = IMessage> ({
       Linking.openURL(url).catch(e => {
         error(e, 'No handler for URL:', url)
       })
-  }
-
-  const onPhonePress = (phone: string) => {
-    const options =
-      optionTitles && optionTitles.length > 0
-        ? optionTitles.slice(0, 3)
-        : DEFAULT_OPTION_TITLES
-    const cancelButtonIndex = options.length - 1
-    actionSheet().showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-      },
-      (buttonIndex?: number) => {
-        switch (buttonIndex) {
-          case 0:
-            Linking.openURL(`tel:${phone}`).catch(e => {
-              error(e, 'No handler for telephone')
-            })
-            break
-          case 1:
-            Linking.openURL(`sms:${phone}`).catch(e => {
-              error(e, 'No handler for text')
-            })
-            break
-        }
-      }
-    )
   }
 
   const onEmailPress = (email: string) =>
@@ -152,7 +118,6 @@ export function MessageText<TMessage extends IMessage = IMessage> ({
         parse={[
           ...(parsePatterns ? parsePatterns(linkStyle as unknown as TextStyle) : []),
           { type: 'url', style: linkStyle, onPress: onUrlPress },
-          { type: 'phone', style: linkStyle, onPress: onPhonePress },
           { type: 'email', style: linkStyle, onPress: onEmailPress },
         ]}
         childrenProps={{ ...textProps }}
