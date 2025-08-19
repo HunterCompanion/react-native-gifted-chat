@@ -30,7 +30,7 @@
     "lib"
   ],
   "scripts": {
-    "build": "rm -rf lib/ && yarn tsc",
+    "build": "rm -rf lib/ && yarn tsc --transpileOnly",
     "lint": "yarn eslint src",
     "lint:fix": "yarn eslint --cache --fix",
     "prepublishOnly": "yarn lint && yarn build && yarn test",
