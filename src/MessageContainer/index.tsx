@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   View,
@@ -29,7 +30,7 @@ export * from './types'
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList)
 
-function MessageContainer<TMessage extends IMessage = IMessage> (props: MessageContainerProps<TMessage>) {
+function MessageContainer<TMessage extends IMessage = IMessage>(props: MessageContainerProps<TMessage>) {
   const {
     messages = [],
     user,
@@ -140,7 +141,7 @@ function MessageContainer<TMessage extends IMessage = IMessage> (props: MessageC
       makeScrollToBottomHidden()
   }, [handleOnScrollProp, inverted, scrollToBottomOffset, scrollToBottomOpacity])
 
-  const renderItem = useCallback(({ item, index }: ListRenderItemInfo<unknown>): React.ReactElement | null => {
+  const renderItem: (info: ListRenderItemInfo<unknown>) => React.ReactElement | null = useCallback(({ item, index }: ListRenderItemInfo<unknown>): React.ReactElement | null => {
     const messageItem = item as TMessage
 
     if (!messageItem._id && messageItem._id !== 0)
@@ -261,7 +262,7 @@ function MessageContainer<TMessage extends IMessage = IMessage> (props: MessageC
       onLoadEarlier()
   }, [infiniteScroll, loadEarlier, onLoadEarlier, isLoadingEarlier])
 
-  const keyExtractor = useCallback((item: unknown) => (item as TMessage)._id.toString(), [])
+  const keyExtractor: (item: unknown, index: number) => string = useCallback((item: unknown) => (item as TMessage)._id.toString(), [])
 
   const renderCell = useCallback((props: CellRendererProps<unknown>) => {
     const handleOnLayout = (event: LayoutChangeEvent) => {
@@ -351,8 +352,10 @@ function MessageContainer<TMessage extends IMessage = IMessage> (props: MessageC
       <AnimatedFlatList
         extraData={extraData}
         ref={forwardRef as React.Ref<FlatList<unknown>>}
+        // @ts-expect-error - AnimatedFlatList type compatibility issue
         keyExtractor={keyExtractor}
         data={messages}
+        // @ts-expect-error - AnimatedFlatList type compatibility issue
         renderItem={renderItem}
         inverted={inverted}
         automaticallyAdjustContentInsets={false}
